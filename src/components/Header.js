@@ -248,8 +248,12 @@ const Header = () => {
               <UserButton onClick={toggleUserMenu}>
                 {user.avatar ? (
                   <img 
-                    src={getImageUrl(user.avatar, '/placeholder-avatar.jpg', user.id)} 
+                    src={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/users/avatar/${user.id}?t=${new Date().getTime()}`} 
                     alt={`${user.username}'s avatar`} 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/placeholder-avatar.jpg';
+                    }}
                   />
                 ) : (
                   <div style={{

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import api from '../api/config';
+import api, { uploadFormData } from '../api/config';
 import { getImageUrl } from '../utils/imageUtils';
 
 const FormContainer = styled.div`
@@ -276,7 +276,13 @@ const AdminGameForm = ({ game = null, onGameAdded, onGameUpdated }) => {
       
       if (coverImage) {
         formData.append('cover_image', coverImage);
-        console.log('Добавлен файл обложки:', coverImage.name);
+        console.log('Добавлен файл обложки:', coverImage.name, coverImage.type, coverImage.size);
+        
+        // Проверяем содержимое формы
+        console.log('Содержимое формы:');
+        for (let pair of formData.entries()) {
+          console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
+        }
       } else {
         // Если это создание новой игры и нет обложки, добавляем заглушку
         if (!game) {
@@ -289,12 +295,12 @@ const AdminGameForm = ({ game = null, onGameAdded, onGameUpdated }) => {
       let response;
       if (game) {
         // Обновление существующей игры
-        response = await api.put(`/games/${game.id}`, formData);
+        response = await uploadFormData(`/games/${game.id}`, formData, 'put');
         setSuccess('Игра успешно обновлена');
         if (onGameUpdated) onGameUpdated(response.data.game);
       } else {
         // Создание новой игры
-        response = await api.post('/games', formData);
+        response = await uploadFormData('/games', formData);
         setSuccess('Игра успешно добавлена');
         
         // Сброс формы

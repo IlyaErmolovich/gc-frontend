@@ -181,8 +181,12 @@ const GameCard = ({ game }) => {
       <Card>
         <CardImage>
           <img 
-            src={getImageUrl(game.cover_image, '/placeholder-game.jpg')} 
+            src={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/games/cover/${game.id}?t=${new Date().getTime()}`} 
             alt={game.title} 
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = '/placeholder-game.jpg';
+            }}
           />
           <ReleaseDate>{formatDate(game.release_date)}</ReleaseDate>
           {rating && <GameRating>{rating}</GameRating>}
