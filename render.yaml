@@ -1,12 +1,14 @@
 services:
   - type: web
     name: games-catalog-frontend
-    env: static
+    env: node
     buildCommand: npm install && npm run build
-    staticPublishPath: ./build
+    startCommand: npm run serve
     envVars:
       - key: REACT_APP_API_URL
         sync: false # Установите URL вашего API на Render
+      - key: PORT
+        value: 10000
     headers:
       - path: /*
         name: Cache-Control
