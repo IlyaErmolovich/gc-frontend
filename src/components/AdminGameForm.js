@@ -175,7 +175,9 @@ const AdminGameForm = ({ game = null, onGameAdded, onGameUpdated }) => {
   const [publisher, setPublisher] = useState(game ? game.publisher : '');
   const [releaseDate, setReleaseDate] = useState(game ? game.release_date.split('T')[0] : '');
   const [coverImage, setCoverImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(game && game.cover_image ? getImageUrl(game.cover_image) : null);
+  const [previewUrl, setPreviewUrl] = useState(
+    game ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/games/cover/${game.id}?t=${new Date().getTime()}` : null
+  );
   const [selectedGenres, setSelectedGenres] = useState(game ? game.genres : []);
   const [selectedPlatforms, setSelectedPlatforms] = useState(game ? game.platforms : []);
   const [genres, setGenres] = useState([]);

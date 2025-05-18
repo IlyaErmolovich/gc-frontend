@@ -269,12 +269,16 @@ const GamePage = () => {
   return (
     <PageContainer>
       <GameHeader>
-        <BackgroundImage image={game.cover_image ? getImageUrl(game.cover_image) : '/placeholder-game.jpg'} />
+        <BackgroundImage image={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/games/cover/${game.id}?t=${new Date().getTime()}`} />
         <GameContent>
           <GameCover>
             <img 
-              src={game.cover_image ? getImageUrl(game.cover_image) : '/placeholder-game.jpg'} 
+              src={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/games/cover/${game.id}?t=${new Date().getTime()}`} 
               alt={game.title} 
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/placeholder-game.jpg';
+              }}
             />
           </GameCover>
           <GameInfo>
