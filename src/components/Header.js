@@ -248,7 +248,7 @@ const Header = () => {
               <UserButton onClick={toggleUserMenu}>
                 {user.avatar ? (
                   <img 
-                    src={getImageUrl(user.avatar)} 
+                    src={getImageUrl(user.avatar, '/placeholder-avatar.jpg', user.id)} 
                     alt={`${user.username}'s avatar`} 
                   />
                 ) : (

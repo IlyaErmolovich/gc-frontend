@@ -276,6 +276,14 @@ const AdminGameForm = ({ game = null, onGameAdded, onGameUpdated }) => {
       
       if (coverImage) {
         formData.append('cover_image', coverImage);
+        console.log('Добавлен файл обложки:', coverImage.name);
+      } else {
+        // Если это создание новой игры и нет обложки, добавляем заглушку
+        if (!game) {
+          setError('Загрузите обложку игры');
+          setIsSubmitting(false);
+          return;
+        }
       }
       
       let response;
