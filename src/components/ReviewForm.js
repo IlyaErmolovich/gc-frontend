@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
+import api from '../api/config';
 
 const FormContainer = styled.div`
   background-color: ${props => props.theme.colors.cardBg};
@@ -133,8 +133,8 @@ const ReviewForm = ({ gameId, onReviewAdded }) => {
     setIsSubmitting(true);
     
     try {
-      await axios.post(`/reviews/game/${gameId}`, {
-        rating,
+      await api.post(`/reviews/game/${gameId}`, {
+        raiting: rating,
         reviewText
       });
       
