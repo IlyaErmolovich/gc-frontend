@@ -8,11 +8,18 @@ const PORT = process.env.PORT || 3000;
 // Установка каталога для статических файлов
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Настройка CORS
+// Настройка CORS - разрешаем запросы с любого источника
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, user-id, username, Origin');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 часа в секундах
+  
+  // Предварительная проверка OPTIONS
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
   next();
 });
 

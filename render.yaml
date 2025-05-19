@@ -1,26 +1,33 @@
 services:
+  # Фронтенд - веб-приложение
   - type: web
     name: games-catalog-frontend
-    env: node
+    env: static
     buildCommand: npm install && npm run build
-    startCommand: npm run serve
+    staticPublishPath: ./build
     envVars:
       - key: REACT_APP_API_URL
-        sync: false # Установите URL вашего API на Render
-      - key: PORT
-        value: 10000
+        value: https://gc-backend-u67y.onrender.com
     headers:
       - path: /*
         name: Cache-Control
         value: no-cache
-    autoDeploy: true
     routes:
-      - type: spa
-        name: frontend
-        buildCommand: npm run build
-        staticPublishPath: ./build/
-        routes:
-          - source: /*
-            destination: /index.html
-    # Директория fallback для всех маршрутов    
-    pullRequestPreviewsEnabled: true 
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    autoDeploy: true
+    pullRequestPreviewsEnabled: true
+  
+  # Бэкенд - веб-сервис
+  - type: web
+    name: games-catalog-backend
+    env: node
+    region: frankfurt
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production 
