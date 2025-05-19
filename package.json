@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "node static-host.js"
+    "serve": "node static-host.js",
+    "deploy": "npm run build && npm run serve"
   },
   "eslintConfig": {
     "extends": [

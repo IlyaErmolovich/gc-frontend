@@ -120,7 +120,14 @@ const ReviewList = ({ reviews, gameId, onReviewDeleted }) => {
               <UserInfo>
                 <UserAvatar>
                   {review.avatar ? (
-                    <img src={getImageUrl(review.avatar)} alt={review.username} />
+                    <img 
+                      src={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/users/avatar/${review.user_id}?t=${new Date().getTime()}`} 
+                      alt={review.username} 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/placeholder-avatar.jpg';
+                      }}
+                    />
                   ) : (
                     <div style={{ background: '#4B0082', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
                       {review.username.charAt(0).toUpperCase()}

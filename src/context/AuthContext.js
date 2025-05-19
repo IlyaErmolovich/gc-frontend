@@ -16,8 +16,11 @@ export const AuthProvider = ({ children }) => {
       const isLoggedIn = localStorage.getItem('isLoggedIn');
       if (isLoggedIn) {
         try {
-          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-          setUser(userData);
+          // Получаем актуальные данные с сервера вместо использования локального хранилища
+          const response = await api.get('/users/profile');
+          setUser(response.data.user);
+          // Обновляем данные в localStorage
+          localStorage.setItem('userData', JSON.stringify(response.data.user));
         } catch (err) {
           console.error('Ошибка проверки авторизации:', err);
           localStorage.removeItem('isLoggedIn');
@@ -58,6 +61,19 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userData', JSON.stringify(res.data.user));
       setUser(res.data.user);
+
+      // Получаем полные данные профиля
+      try {
+        const profileRes = await api.get('/users/profile');
+        if (profileRes.data && profileRes.data.user) {
+          // Обновляем данные пользователя
+          localStorage.setItem('userData', JSON.stringify(profileRes.data.user));
+          setUser(profileRes.data.user);
+        }
+      } catch (profileErr) {
+        console.error("Ошибка получения профиля:", profileErr);
+      }
+
       return res.data;
     } catch (err) {
       console.error("Ошибка логина:", err);

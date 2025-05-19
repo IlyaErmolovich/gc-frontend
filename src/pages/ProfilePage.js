@@ -41,6 +41,9 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Используем userId как ключ для отслеживания изменений пользователя
+  const userId = user ? user.id : null;
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) return;
@@ -49,7 +52,8 @@ const ProfilePage = () => {
         setLoading(true);
         setError(null);
         
-        const response = await api.get('/users/profile');
+        // Добавляем timestamp для предотвращения кэширования
+        const response = await api.get(`/users/profile?t=${new Date().getTime()}`);
         setUserData(response.data);
       } catch (err) {
         setError('Не удалось загрузить данные профиля. Пожалуйста, попробуйте позже.');
@@ -60,7 +64,9 @@ const ProfilePage = () => {
     };
 
     fetchUserData();
-  }, [user]);
+    
+    // Обновляем данные при изменении userId
+  }, [userId]);
 
   // Перенаправляем неавторизованных пользователей
   if (!authLoading && !user) {
