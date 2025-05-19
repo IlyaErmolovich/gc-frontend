@@ -20,6 +20,12 @@ export const AuthProvider = ({ children }) => {
   // Проверка авторизации при загрузке
   useEffect(() => {
     const checkAuth = async () => {
+      // Проверяем наличие сохраненных ошибок
+      const savedError = localStorage.getItem('authError');
+      if (savedError) {
+        setError(savedError);
+      }
+      
       const isLoggedIn = localStorage.getItem('isLoggedIn');
       if (isLoggedIn) {
         try {
@@ -84,6 +90,8 @@ export const AuthProvider = ({ children }) => {
       
       // Сначала очищаем текущую сессию для предотвращения конфликтов
       clearUserSession();
+      // Очищаем предыдущие ошибки
+      localStorage.removeItem('authError');
       
       const res = await api.post('/auth/login', { username, password });
       console.log("Получен ответ:", res.data);
@@ -109,7 +117,10 @@ export const AuthProvider = ({ children }) => {
       return res.data;
     } catch (err) {
       console.error("Ошибка логина:", err);
-      setError(err.response?.data?.message || 'Ошибка входа');
+      const errorMessage = err.response?.data?.message || 'Ошибка входа';
+      setError(errorMessage);
+      // Сохраняем ошибку в localStorage чтобы она не исчезала после перезагрузки страницы
+      localStorage.setItem('authError', errorMessage);
       throw err;
     }
   };

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthContext } from '../context/AuthContext';
@@ -173,8 +173,14 @@ const AuthForm = ({ isRegister = false }) => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { login, register } = useContext(AuthContext);
+  const { login, register, error: contextError } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (contextError) {
+      setError(contextError);
+    }
+  }, [contextError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -200,7 +206,6 @@ const AuthForm = ({ isRegister = false }) => {
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Произошла ошибка. Пожалуйста, попробуйте снова.');
-      // Оставляем сообщение об ошибке на экране, не сбрасываем его автоматически
     } finally {
       setIsSubmitting(false);
     }
@@ -209,6 +214,7 @@ const AuthForm = ({ isRegister = false }) => {
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
     setError('');
+    localStorage.removeItem('authError');
   };
 
   return (
