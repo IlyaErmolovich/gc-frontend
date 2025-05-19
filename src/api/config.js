@@ -12,6 +12,25 @@ const api = axios.create({
   timeout: 30000
 });
 
+// Добавляем интерцептор запросов для передачи данных пользователя
+api.interceptors.request.use(
+  config => {
+    // Получаем данные пользователя из localStorage, если есть
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    
+    // Если есть ID пользователя, добавляем в заголовки запроса
+    if (userData && userData.id) {
+      config.headers['user-id'] = userData.id;
+      config.headers['username'] = userData.username || '';
+    }
+    
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
 // Функция для отправки формы с файлами
 const uploadFormData = async (endpoint, formData, method = 'post') => {
   try {
@@ -22,6 +41,13 @@ const uploadFormData = async (endpoint, formData, method = 'post') => {
       },
       timeout: 30000
     };
+    
+    // Добавляем информацию о пользователе в заголовки
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (userData && userData.id) {
+      config.headers['user-id'] = userData.id;
+      config.headers['username'] = userData.username || '';
+    }
     
     console.log(`Отправка ${method.toUpperCase()} запроса на ${url} с FormData`);
     let response;
