@@ -200,7 +200,7 @@ const GameCard = ({ game }) => {
             {game.genres && game.genres.slice(0, 3).map((genre, index) => (
               <Tag key={index}>{genre}</Tag>
             ))}
-            {game.platforms && game.platforms.slice(0, 2).map((platform, index) => (
+            {game.platforms && game.platforms.map((platform, index) => (
               <PlatformTag key={`p-${index}`}>{platform}</PlatformTag>
             ))}
           </CardTags>

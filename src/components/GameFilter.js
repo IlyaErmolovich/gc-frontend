@@ -252,6 +252,9 @@ const GameFilter = ({ onFilterChange }) => {
         ]);
         setGenres(genresResponse.data);
         setPlatforms(platformsResponse.data);
+        
+        // Выводим в консоль для отладки
+        console.log('Загружены платформы:', platformsResponse.data);
       } catch (error) {
         console.error('Ошибка загрузки данных для фильтра:', error);
       }

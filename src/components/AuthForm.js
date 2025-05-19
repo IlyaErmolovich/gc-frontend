@@ -200,6 +200,7 @@ const AuthForm = ({ isRegister = false }) => {
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Произошла ошибка. Пожалуйста, попробуйте снова.');
+      // Оставляем сообщение об ошибке на экране, не сбрасываем его автоматически
     } finally {
       setIsSubmitting(false);
     }
